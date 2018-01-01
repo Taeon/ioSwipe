@@ -1,0 +1,20 @@
+{
+  "name": "ioSwipe",
+  "homepage": "https://github.com/Taeon/ioSwipe",
+  "description": "Quickly add support for touchscreen swipe events to HTML/JavaScript.",
+  "main": "dist/js/ioswipe.js",
+  "keywords": [
+    "javascript",
+    "touchscreen",
+    "swipe",
+    "events"
+  ],
+  "authors": [
+    "Pat Fox"
+  ],
+  "license": "MIT",
+  "ignore": [
+      "src",
+      "lib"
+  ]
+}

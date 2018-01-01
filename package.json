@@ -1,0 +1,10 @@
+{
+  "name": "Taeon-ioSwipe",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Taeon/ioSwipe.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+  }
+}

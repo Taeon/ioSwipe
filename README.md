@@ -1,4 +1,5 @@
 # ioSwipe
+
 Quickly add support for touchscreen swipe events to HTML/JavaScript.
 
 ## Usage
@@ -29,3 +30,7 @@ document.getElementById( 'myElement' ).addEventListener(
 // With jQuery
 $( 'myElement' ).on( 'swipeleft', function(){alert( 'Left swipe occurred' )} );
 ```
+
+## Acknowledgements
+
+I shamelessly stole the basic swipe code from this pen: https://codepen.io/ganmahmud/pen/RaoKZa
