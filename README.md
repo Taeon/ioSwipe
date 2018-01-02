@@ -9,9 +9,9 @@ Include the code, then simply call ioSwipe and pass in the element(s) you want t
 ```javascript
 ioswipe( '#myElement' ); // Selector string
 ioswipe( document.getElementById( 'myElement' ) ); // A single element
-ioswipe( $( '#myElement' ) ); // A jQuery collection
 ioswipe( document.querySelector( '#myElement' ) ); // A single element
 ioswipe( document.querySelectorAll( '.my-element-class' ) ); // A collection of elements
+ioswipe( $( '.my-element-class' ) ); // A jQuery collection
 ```
 
 \* in fact, internally it uses ```querySelectorAll``` so if you're using jQuery and are worried about any possible differences in behaviour, just pass in a jQuery collection instead.
@@ -30,6 +30,33 @@ document.getElementById( 'myElement' ).addEventListener(
 // With jQuery
 $( 'myElement' ).on( 'swipeleft', function(){alert( 'Left swipe occurred' )} );
 ```
+
+## Options
+
+You can pass in various options when calling ioswipe. Here they are, with their default values:
+
+```javascript
+ioswipe(
+    '#myElement',
+    {
+        threshold: 150, //required min distance traveled to be considered swipe
+        restraint: 100, // maximum distance allowed at the same time in perpendicular direction
+        allowedTime: 300, // maximum time allowed to travel that distance
+        lock_scroll: false // (See below)
+    }
+);
+```
+
+
+## Scrolling or swiping?
+
+If you're planning to listen for 'swipeup' and 'swipedown' swipe actions, you might find that you have a problem: how does the device know that you're swiping rather than scrolling? If you want to avoid confusion, you can prevent scrolling when swiping by enabling the ```lock_scroll``` option:
+
+```javascript
+ioswipe( '#myElement', {lock_scroll:true} );
+```
+
+IMPORTANT: Note that this will prevent *any* scrolling when dragging a finger over the element. That means that if your element covers the entire screen, **the user will not be able to scroll at all**. So use with caution.
 
 ## Acknowledgements
 

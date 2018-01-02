@@ -42,6 +42,9 @@
     function () {
 
         var Swipe = function( el, dir ){
+            if( dir == 'none' ){
+                return;
+            }
             var data = {direction: dir};
             if (window.CustomEvent) {
                 // Generic swipe event
@@ -61,7 +64,19 @@
             el.dispatchEvent(swipe_dir_event);
         }
 
-        var EnableSwipe = function( el ){
+        var EnableSwipe = function( el, options ){
+
+            var o = {
+                threshold: 150, //required min distance traveled to be considered swipe
+                restraint: 100, // maximum distance allowed at the same time in perpendicular direction
+                allowedTime: 300, // maximum time allowed to travel that distance
+                lock_scroll: false
+            };
+            if( typeof options != 'undefined' ){
+                for( var index in options ){
+                    o[ index ] = options[ index ];
+                }
+            }
 
             var touchsurface = el,
             swipedir,
@@ -69,9 +84,9 @@
             startY,
             distX,
             distY,
-            threshold = 150, //required min distance traveled to be considered swipe
-            restraint = 100, // maximum distance allowed at the same time in perpendicular direction
-            allowedTime = 300, // maximum time allowed to travel that distance
+            threshold = o.threshold,
+            restraint = o.restraint,
+            allowedTime = o.allowedTime,
             elapsedTime,
             startTime
 
@@ -82,11 +97,15 @@
                 startX = touchobj.pageX
                 startY = touchobj.pageY
                 startTime = new Date().getTime() // record time when finger first makes contact with surface
-                e.preventDefault()
+                if( o.lock_scroll ){
+                    e.preventDefault()
+                }
             }, false)
 
             touchsurface.addEventListener('touchmove', function(e){
-                e.preventDefault() // prevent scrolling when inside DIV
+                if( o.lock_scroll ){
+                    e.preventDefault()
+                }
             }, false)
 
             touchsurface.addEventListener('touchend', function(e){
@@ -103,11 +122,13 @@
                     }
                 }
                 Swipe(el,swipedir);
-                e.preventDefault();
+                if( o.lock_scroll ){
+                    e.preventDefault()
+                }
             }, false)
         }
 
-        var ioswipe = function( el ){
+        var ioswipe = function( el, options ){
             switch( typeof el ){
                 case 'object':{
                     if( typeof el.length != 'number' ){
@@ -124,7 +145,7 @@
                 }
             }
             for( var i = 0; i < el.length; i++ ){
-                EnableSwipe( el[ i ] );
+                EnableSwipe( el[ i ], options );
             }
         }
         return ioswipe;
