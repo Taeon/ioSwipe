@@ -65,7 +65,10 @@
         }
 
         var EnableSwipe = function( el, options ){
-
+            // Don't re-bind
+            if( typeof el.ioswipe_events != 'undefined' ){
+                return;
+            }
             var o = {
                 threshold: 150, //required min distance traveled to be considered swipe
                 restraint: 100, // maximum distance allowed at the same time in perpendicular direction
@@ -90,7 +93,7 @@
             elapsedTime,
             startTime
 
-            touchsurface.addEventListener('touchstart', function(e){
+            var event_start = function(e){
                 var touchobj = e.changedTouches[0]
                 swipedir = 'none'
                 dist = 0
@@ -100,15 +103,17 @@
                 if( o.lock_scroll ){
                     e.preventDefault()
                 }
-            }, false)
+            }
+            touchsurface.addEventListener( 'touchstart', event_start, false );
 
-            touchsurface.addEventListener('touchmove', function(e){
+            var event_move = function(e){
                 if( o.lock_scroll ){
                     e.preventDefault()
                 }
-            }, false)
+            }
+            touchsurface.addEventListener( 'touchmove', event_move, false );
 
-            touchsurface.addEventListener('touchend', function(e){
+            var event_end = function(e){
                 var touchobj = e.changedTouches[0]
                 distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
                 distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
@@ -125,7 +130,15 @@
                 if( o.lock_scroll ){
                     e.preventDefault()
                 }
-            }, false)
+            }
+            touchsurface.addEventListener( 'touchend', event_end, false );
+
+            // Store for later, in case we need to destroy()
+            touchsurface.ioswipe_events = [
+                {event:'touchstart',func:event_start},
+                {event:'touchmove',func:event_move},
+                {event:'touchend',func:event_end},
+            ];
         }
 
         var ioswipe = function( el, options ){
@@ -147,6 +160,37 @@
             for( var i = 0; i < el.length; i++ ){
                 EnableSwipe( el[ i ], options );
             }
+
+        }
+        /**
+         * Remove swipe event handlers
+         */
+        ioswipe.destroy = function( el ){
+            switch( typeof el ){
+                case 'object':{
+                    if( typeof el.length != 'number' ){
+                        // A single element e.g. result of document.querySelector()
+                        // or document.getElementById())
+                        el = [ el ];
+                    }
+                    break;
+                }
+                case 'string':{
+                    // A selector string
+                    el = document.querySelectorAll( el );
+                    break;
+                }
+            }
+            el.map(
+                function() {
+                    if( typeof this.ioswipe_events !== 'undefined' ){
+                        for( var e = 0; e < this.ioswipe_events.length; e++ ){
+                            this.removeEventListener( this.ioswipe_events[ e ].event, this.ioswipe_events[ e ].func );
+                        }
+                        delete this.ioswipe_events;
+                    }
+                }
+            )
         }
         return ioswipe;
     }
