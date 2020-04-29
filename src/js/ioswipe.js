@@ -182,12 +182,12 @@
                 }
             }
             el.map(
-                function() {
-                    if( typeof this.ioswipe_events !== 'undefined' ){
-                        for( var e = 0; e < this.ioswipe_events.length; e++ ){
-                            this.removeEventListener( this.ioswipe_events[ e ].event, this.ioswipe_events[ e ].func );
+                function( element ) {
+                    if( typeof element.ioswipe_events !== 'undefined' ){
+                        for( var e = 0; e < element.ioswipe_events.length; e++ ){
+                            element.removeEventListener( element.ioswipe_events[ e ].event, element.ioswipe_events[ e ].func );
                         }
-                        delete this.ioswipe_events;
+                        delete element.ioswipe_events;
                     }
                 }
             )
